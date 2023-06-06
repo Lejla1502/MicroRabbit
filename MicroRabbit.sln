@@ -15,7 +15,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentatio
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MicroRabbit.Domain.Core", "MicroRabbit.Domain.Core\MicroRabbit.Domain.Core.csproj", "{BC94CCD7-3966-4630-8C11-C5977B33E64A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MicroRabbit.Infra.Bus", "MicroRabbit.Infra.Bus\MicroRabbit.Infra.Bus.csproj", "{30184909-CAF0-4715-A135-86B39C11E1B2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MicroRabbit.Infra.Bus", "MicroRabbit.Infra.Bus\MicroRabbit.Infra.Bus.csproj", "{30184909-CAF0-4715-A135-86B39C11E1B2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MicroRabbit.Infra.IoC", "MicroRabbit.Infra.IoC\MicroRabbit.Infra.IoC.csproj", "{BDACC1F1-AEC9-4E59-9F43-8310EF13E5E0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,6 +33,10 @@ Global
 		{30184909-CAF0-4715-A135-86B39C11E1B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{30184909-CAF0-4715-A135-86B39C11E1B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{30184909-CAF0-4715-A135-86B39C11E1B2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BDACC1F1-AEC9-4E59-9F43-8310EF13E5E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BDACC1F1-AEC9-4E59-9F43-8310EF13E5E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BDACC1F1-AEC9-4E59-9F43-8310EF13E5E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BDACC1F1-AEC9-4E59-9F43-8310EF13E5E0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -38,6 +44,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{BC94CCD7-3966-4630-8C11-C5977B33E64A} = {1E435791-D87C-4D21-8B2C-994450A708F4}
 		{30184909-CAF0-4715-A135-86B39C11E1B2} = {27FA754C-C613-4C4D-9204-B58B26DB0C27}
+		{BDACC1F1-AEC9-4E59-9F43-8310EF13E5E0} = {2027E4BF-5A33-4515-900C-E3F79B573B5F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A5BC41CF-B94F-4FA6-9266-BF4F2FF25B7A}
