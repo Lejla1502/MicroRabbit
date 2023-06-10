@@ -21,11 +21,11 @@ namespace MicroRabbit.Infra.Bus
         private readonly Dictionary<string, List<Type>> _handlers;
         private readonly List<Type> _eventTypes;
 
-        public RabbitMQBus(IMediator mediator, Dictionary<string, List<Type>> handlers, List<Type> eventTypes)
+        public RabbitMQBus(IMediator mediator)
         {
             _mediator = mediator;
-            _handlers = handlers;
-            _eventTypes = eventTypes;
+            _handlers = new Dictionary<string, List<Type>>();
+            _eventTypes = new List<Type>();
         }
 
         public Task SendCommand<T>(T command) where T : Command
