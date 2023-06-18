@@ -2,6 +2,7 @@
 using MicroRabbit.Domain.Core.Bus;
 using MicroRabbit.Domain.Core.Commands;
 using MicroRabbit.Domain.Core.Events;
+using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
@@ -20,10 +21,12 @@ namespace MicroRabbit.Infra.Bus
         //subscription handlers which know about whihc subscriptions are tied to which handlers and events
         private readonly Dictionary<string, List<Type>> _handlers;
         private readonly List<Type> _eventTypes;
+        private readonly IServiceScopeFactory _serviceScopeFactory;
 
-        public RabbitMQBus(IMediator mediator)
+        public RabbitMQBus(IMediator mediator, IServiceScopeFactory serviceScopeFactory)
         {
             _mediator = mediator;
+            _serviceScopeFactory = serviceScopeFactory;
             _handlers = new Dictionary<string, List<Type>>();
             _eventTypes = new List<Type>();
         }
@@ -60,7 +63,7 @@ namespace MicroRabbit.Infra.Bus
                 _eventTypes.Add(typeof(T));
 
             //if dictionary keys don't already exist with the event name, add them
-            if (_handlers.ContainsKey(eventName))
+            if (!_handlers.ContainsKey(eventName))
                 _handlers.Add(eventName, new List<Type>());
 
             //if handler already exist of handler type throw exception
@@ -135,26 +138,29 @@ namespace MicroRabbit.Infra.Bus
             //we can have multiple subscribers
             if(_handlers.ContainsKey(eventName))
             {
-                var subscriptions = _handlers[eventName]; //because there can be multiple subscribers to this event
-                foreach(var subscription in subscriptions)
+                using(var scope = _serviceScopeFactory.CreateScope())
                 {
-                    //creating handler; dinamically creating instance of Type -> this is for generics
-                    var handler = Activator.CreateInstance(subscription);
-                    if (handler == null) continue;   //continue looping until found
+                    var subscriptions = _handlers[eventName]; //because there can be multiple subscribers to this event
+                    foreach (var subscription in subscriptions)
+                    {
+                        //creating handler; dinamically creating instance of Type -> this is for generics
+                        var handler = scope.ServiceProvider.GetService(subscription); //Activator.CreateInstance(subscription);
+                        if (handler == null) continue;   //continue looping until found
 
-                    //now we can loop through our events
-                    var eventType = _eventTypes.SingleOrDefault(t => t.Name == eventName);
+                        //now we can loop through our events
+                        var eventType = _eventTypes.SingleOrDefault(t => t.Name == eventName);
 
-                    var @event = JsonConvert.DeserializeObject(message, eventType);
+                        var @event = JsonConvert.DeserializeObject(message, eventType);
 
-                    var concreteType = typeof(IEventHandler<>).MakeGenericType(eventType);
+                        var concreteType = typeof(IEventHandler<>).MakeGenericType(eventType);
 
-                    //invoking main method - generic - it will handle any situtation
-                    //inovking 'Handle' method of concreteType
-                    //this will use generics to kick of handle method inside our handler and passing
-                    //it the event
-                    await (Task)concreteType.GetMethod("Handle").Invoke(handler, new object[] { @event });
-                    //this doees the main work of routing to the right handler
+                        //invoking main method - generic - it will handle any situtation
+                        //inovking 'Handle' method of concreteType
+                        //this will use generics to kick of handle method inside our handler and passing
+                        //it the event
+                        await (Task)concreteType.GetMethod("Handle").Invoke(handler, new object[] { @event });
+                        //this doees the main work of routing to the right handler
+                    }
                 }
             }
         }
