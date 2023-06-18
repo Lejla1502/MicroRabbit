@@ -26,7 +26,7 @@ namespace MicroRabbit.Transfer.Domain.EventHandlers
                 TransferAmount = @event.Amount
             });
 
-            return Task.CompletedTask;
+             return Task.CompletedTask;
         }
     }
 }
